@@ -303,7 +303,7 @@ const program1=[
   "i'm going to play football","i am going to play football"
  ],
  required:["going","to","play"],
- hint:"I'm going to + 動詞の原形 で始めよう。soccer / football のどちらでもOK。"
+ hint:"I'm going to + 動詞の原形 で「～する予定です」と伝えます。"
 },
 {
  goal:"約束に遅刻しそうなことを伝えられる",
@@ -325,7 +325,7 @@ const program1=[
  models:["I enjoyed playing soccer.","I enjoyed playing football."],
  accepted:["i enjoyed playing soccer","i enjoyed playing football"],
  required:["enjoyed","playing"],
- hint:"enjoy の後ろは ～ing。soccer / football のどちらでもOK。"
+ hint:"enjoy の後ろは 動詞の ～ing 形を使います。"
 }];
 
 const program2=[
@@ -722,6 +722,69 @@ const program3=[
 
 let program=Number(localStorage.getItem("sunshine_program")||1);
 const sunshine2Programs={1:program1,2:program2,3:program3,4:program4};
+
+/* ===== SUNSHINE 2 複数会話パターン ===== */
+const sunshine2ConversationVariants={
+ "1-1":[
+  {qEn:"What are you going to do this weekend?",qJa:"今週末、何をする予定ですか？",guide:"「今週末、サッカーをする予定です。」と答えてみよう。",models:["I'm going to play soccer this weekend.","I am going to play soccer this weekend.","I'm going to play football this weekend.","I am going to play football this weekend."],accepted:["im going to play soccer this weekend","i am going to play soccer this weekend","im going to play football this weekend","i am going to play football this weekend"]},
+  {qEn:"What are you going to do on Sunday?",qJa:"日曜日、何をする予定ですか？",guide:"「祖父母を訪ねる予定です。」と答えてみよう。",models:["I'm going to visit my grandparents.","I am going to visit my grandparents."],accepted:["im going to visit my grandparents","i am going to visit my grandparents"]}
+ ],
+ "1-2":[
+  {qEn:"Where are you now?",qJa:"今どこにいますか？",guide:"「ごめん、遅れます。」と答えてみよう。",models:["Sorry, I'll be late.","Sorry, I will be late."],accepted:["sorry ill be late","sorry i will be late"]},
+  {qEn:"Can you come here by three?",qJa:"3時までにここへ来られますか？",guide:"「ごめん、遅れます。」と答えてみよう。",models:["Sorry, I'll be late.","Sorry, I will be late."],accepted:["sorry ill be late","sorry i will be late"]}
+ ],
+ "1-3":[
+  {qEn:"How was your weekend?",qJa:"週末はどうでしたか？",guide:"「サッカーをして楽しみました。」と答えてみよう。",models:["I enjoyed playing soccer.","I enjoyed playing football."],accepted:["i enjoyed playing soccer","i enjoyed playing football"]},
+  {qEn:"What did you enjoy yesterday?",qJa:"昨日は何をして楽しみましたか？",guide:"「料理をして楽しみました。」と答えてみよう。",models:["I enjoyed cooking."],accepted:["i enjoyed cooking"]}
+ ],
+ "2-1":[
+  {qEn:"Do you know about the new student?",qJa:"新しい生徒のことを知っていますか？",guide:"「彼はサッカーが好きだと聞いています。」と答えてみよう。",models:["I hear that he likes soccer.","I hear he likes soccer.","I hear that he likes football.","I hear he likes football."],accepted:["i hear that he likes soccer","i hear he likes soccer","i hear that he likes football","i hear he likes football"]},
+  {qEn:"Do you know our new teacher?",qJa:"新しい先生のことを知っていますか？",guide:"「彼女はカナダ出身だと聞いています。」と答えてみよう。",models:["I hear that she is from Canada.","I hear she is from Canada."],accepted:["i hear that she is from canada","i hear she is from canada"]}
+ ],
+ "2-2":[
+  {qEn:"When did you start playing soccer?",qJa:"いつサッカーを始めましたか？",guide:"「5歳のとき、お父さんとサッカーを始めました。」と答えてみよう。",models:["When I was five, I started playing soccer with my father.","When I was five, I started playing football with my father."],accepted:["when i was five i started playing soccer with my father","when i was 5 i started playing soccer with my father","when i was five i started playing soccer with my dad","when i was 5 i started playing soccer with my dad","when i was five i started playing football with my father","when i was 5 i started playing football with my father","when i was five i started playing football with my dad","when i was 5 i started playing football with my dad"]},
+  {qEn:"When did you start playing the piano?",qJa:"いつピアノを始めましたか？",guide:"「6歳のとき、ピアノを始めました。」と答えてみよう。",models:["When I was six, I started playing the piano."],accepted:["when i was six i started playing the piano","when i was 6 i started playing the piano"]}
+ ],
+ "2-3":[
+  {qEn:"What will you do if it rains tomorrow?",qJa:"もし明日雨が降ったら、何をしますか？",guide:"「もし雨が降ったら、家にいます。」と答えてみよう。",models:["If it rains, I'll stay home.","If it rains, I will stay home."],accepted:["if it rains ill stay home","if it rains i will stay home"]},
+  {qEn:"What will you do if it is sunny tomorrow?",qJa:"もし明日晴れたら、何をしますか？",guide:"「もし晴れたら、公園へ行きます。」と答えてみよう。",models:["If it is sunny, I'll go to the park.","If it is sunny, I will go to the park."],accepted:["if it is sunny ill go to the park","if it is sunny i will go to the park"]}
+ ],
+ "3-1":[
+  {qEn:"What do you want to do this summer?",qJa:"この夏、何をしたいですか？",guide:"「北海道に行きたいです。」と答えてみよう。",models:["I want to visit Hokkaido.","I want to go to Hokkaido."],accepted:["i want to visit hokkaido","i want to go to hokkaido"]},
+  {qEn:"Where do you want to go this summer?",qJa:"この夏、どこへ行きたいですか？",guide:"「京都に行きたいです。」と答えてみよう。",models:["I want to visit Kyoto.","I want to go to Kyoto."],accepted:["i want to visit kyoto","i want to go to kyoto"]}
+ ],
+ "3-2":[
+  {qEn:"What do you use this computer for?",qJa:"このコンピューターを何のために使いますか？",guide:"「英語を勉強するために使います。」と答えてみよう。",models:["I use it to study English."],accepted:["i use it to study english"]},
+  {qEn:"What do you use your smartphone for?",qJa:"スマートフォンを何のために使いますか？",guide:"「写真を撮るために使います。」と答えてみよう。",models:["I use it to take pictures.","I use it to take photos."],accepted:["i use it to take pictures","i use it to take photos"]}
+ ],
+ "3-3":[
+  {qEn:"What do you need?",qJa:"何が必要ですか？",guide:"「何か飲むものが必要です。」と答えてみよう。",models:["I need something to drink."],accepted:["i need something to drink"]},
+  {qEn:"Are you hungry?",qJa:"おなかがすいていますか？",guide:"「はい。何か食べるものが必要です。」と答えてみよう。",models:["Yes, I need something to eat.","I need something to eat."],accepted:["yes i need something to eat","i need something to eat"]}
+ ],
+ "4-1":[
+  {qEn:"How did you feel when you heard the news?",qJa:"その知らせを聞いたとき、どう感じましたか？",guide:"「その知らせを聞いて驚きました。」と答えてみよう。",models:["I was surprised to hear the news."],accepted:["i was surprised to hear the news"]},
+  {qEn:"How did you feel when you saw Ken there?",qJa:"そこでケンを見たとき、どう感じましたか？",guide:"「ケンを見て驚きました。」と答えてみよう。",models:["I was surprised to see Ken."],accepted:["i was surprised to see ken"]}
+ ],
+ "4-2":[
+  {qEn:"What must you do tomorrow?",qJa:"明日、何をしなければなりませんか？",guide:"「早く起きなければなりません。」と答えてみよう。",models:["I must get up early."],accepted:["i must get up early"]},
+  {qEn:"Can I use my phone in class?",qJa:"授業中に携帯電話を使ってもいいですか？",guide:"「授業中に携帯電話を使ってはいけません。」と答えてみよう。",models:["You mustn't use your phone in class.","You must not use your phone in class."],accepted:["you mustnt use your phone in class","you must not use your phone in class"]}
+ ],
+ "4-3":[
+  {qEn:"Do you have to get up early tomorrow?",qJa:"明日、早く起きる必要がありますか？",guide:"「いいえ、早く起きる必要はありません。」と答えてみよう。",models:["No, I don't have to get up early.","I don't have to get up early."],accepted:["no i dont have to get up early","i dont have to get up early"]},
+  {qEn:"What do you have to do tonight?",qJa:"今夜、何をしなければなりませんか？",guide:"「宿題を終えなければなりません。」と答えてみよう。",models:["I have to finish my homework."],accepted:["i have to finish my homework"]}
+ ]
+};
+
+function attachSunshine2Variants(){
+ for(const [p,qs] of Object.entries(sunshine2Programs)){
+   qs.forEach((q,i)=>{
+     const v=sunshine2ConversationVariants[p+"-"+(i+1)];
+     if(v && v.length) q.variants=v;
+   });
+ }
+}
+attachSunshine2Variants();
+
 const sunshine1Programs={1:sunshine1Program1,2:sunshine1Program2,3:sunshine1Program3,4:sunshine1Program4,5:sunshine1Program5,6:sunshine1Program6,7:sunshine1Program7,8:sunshine1Program8,9:sunshine1Program9,10:sunshine1Program10};
 
 /* ===== SUNSHINE 1 複数会話パターン =====
