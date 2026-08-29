@@ -261,10 +261,12 @@ body.grade1 input#answer:focus{
     </div>
 
     <div id="result" class="result"></div>
+    <div class="note">会話は2〜3パターン。正解すると「次の会話」へ進めます。間違えた会話はそのまま再挑戦します。</div>
     <div id="hint" class="hint"></div>
     <div id="model" class="model"></div>
 
     <div class="buttons">
+      <button class="secondary" id="nextConversationBtn">次の会話</button>
       <button class="secondary" id="nextBtn">次のテーマ</button>
       <button class="secondary" id="resetBtn">進捗をリセット</button>
     </div>
@@ -418,10 +420,10 @@ const sunshine1Program1=[
  label:"① 自分の名前を伝える",
  scene:"初めて会った人に自己紹介をします。",
  qEn:"Hi. What's your name?", qJa:"こんにちは。あなたの名前は何ですか？",
- guide:"「私はユウキです。」",
+ guide:"「私はケンです。」",
  target:"I'm ～.「私は～です。」",
- models:["I'm Yuki.","I am Yuki."],
- accepted:["im yuki","i am yuki"],
+ models:["I'm Ken.","I am Ken."],
+ accepted:["im Ken","i am Ken"],
  hint:"自分の名前を伝えるときは I'm + 名前. を使います。I'm は I am の短縮形です。"
 },
 {
@@ -452,7 +454,7 @@ const sunshine1Program2=[
  goal:"いつ犬の散歩をするかを尋ねられる",
  label:"② 犬の散歩をする時間を尋ねる",
  scene:"友達が犬を飼っていると聞きました。散歩する時間を尋ねます。",
- qEn:"I walk my dog every day.", qJa:"私は毎日犬の散歩をします。",
+ qEn:"I have a dog.", qJa:"私は犬を飼っています。",
  guide:"「いつ犬の散歩をしますか？」と尋ねてみよう。",
  target:'Do you ～?「～しますか。」 / When ～?「いつ～しますか。」',
  models:["When do you walk your dog?"],
@@ -548,12 +550,12 @@ const sunshine1Program6=[
  goal:"好きな理由を尋ねたり答えたりできる",
  label:"② 好きな理由を尋ねる・答える",
  scene:"友達と好きな教科について話しています。",
- qEn:"I like English.", qJa:"私は英語が好きです。",
- guide:"「なぜ英語が好きなの？」と尋ねてみよう。",
+ qEn:"Why do you like English?", qJa:"なぜ英語が好きなのですか？",
+ guide:"「楽しいからです。」と答えてみよう。",
  target:'Why ～? - Because ...「なぜ～ですか。」-「…だからです。」',
- models:["Why do you like English?"],
- accepted:["why do you like english"],
- hint:"理由を尋ねるときは Why ～?。答えるときは Because ... を使います。"
+ models:["Because it's fun.","Because it is fun."],
+ accepted:["because its fun","because it is fun"],
+ hint:"理由を答えるときは Because ... を使います。理由を尋ねるときは Why ～? を使います。"
 }];
 
 const sunshine1Program7=[
@@ -671,7 +673,7 @@ const sunshine1Program10=[
  scene:"友達が昨日の夜8時のことを尋ねています。",
  qEn:"What were you doing at eight last night?", qJa:"昨夜8時、何をしていましたか？",
  guide:"「テレビを見ていました。」",
- target:'What were you doing?「何をしていましたか。」',
+ target:'I was ～ing.「～していました。」',
  models:["I was watching TV."],
  accepted:["i was watching tv","i was watching television"],
  hint:"過去のある時点でしていたことは was/were + 動詞ing で表します。"
@@ -721,6 +723,114 @@ const program3=[
 let program=Number(localStorage.getItem("sunshine_program")||1);
 const sunshine2Programs={1:program1,2:program2,3:program3,4:program4};
 const sunshine1Programs={1:sunshine1Program1,2:sunshine1Program2,3:sunshine1Program3,4:sunshine1Program4,5:sunshine1Program5,6:sunshine1Program6,7:sunshine1Program7,8:sunshine1Program8,9:sunshine1Program9,10:sunshine1Program10};
+
+/* ===== SUNSHINE 1 複数会話パターン =====
+   ★（連続正解数）と会話番号は別管理。
+   正解 → 次の会話へ進める
+   不正解 → 同じ会話をもう一度
+*/
+const sunshine1ConversationVariants={
+ "1-1":[
+  {qEn:"What's your name?",qJa:"あなたの名前は何ですか？",guide:"あいさつは付けずに「私はケンです。」と答えてみよう。",models:["I'm Ken.","I am Ken."],accepted:["im ken","i am ken"]},
+  {qEn:"Hi. What's your name?",qJa:"こんにちは。あなたの名前は何ですか？",guide:"あいさつをして「こんにちは。私はケンです。」と答えてみよう。",models:["Hi, I'm Ken.","Hi, I am Ken.","Hello, I'm Ken.","Hello, I am Ken."],accepted:["hi im ken","hi i am ken","hello im ken","hello i am ken"]},
+  {qEn:"Hello. I'm Emma.",qJa:"こんにちは。私はエマです。",guide:"あいさつを返して「私はケンです。」と自己紹介しよう。",models:["Hello, I'm Ken.","Hello, I am Ken.","Hi, I'm Ken.","Hi, I am Ken.","Nice to meet you. I'm Ken.","Nice to meet you. I am Ken."],accepted:["hello im ken","hello i am ken","hi im ken","hi i am ken","nice to meet you im ken","nice to meet you i am ken"]}
+ ],
+ "1-2":[
+  {qEn:"I'm Emma. Nice to meet you.",qJa:"私はエマです。はじめまして。",guide:"「どこの出身ですか？」と尋ねてみよう。",models:["Where are you from?"],accepted:["where are you from"]},
+  {qEn:"Hi, I'm Mike.",qJa:"こんにちは、私はマイクです。",guide:"「どこの出身ですか？」と尋ねてみよう。",models:["Where are you from?"],accepted:["where are you from"]}
+ ],
+ "2-1":[
+  {qEn:"Do you have any pets?",qJa:"何かペットを飼っていますか？",guide:"「はい。私は2匹の犬を飼っています。」",models:["Yes, I have two dogs.","I have two dogs."],accepted:["yes i have two dogs","i have two dogs","yes i have 2 dogs","i have 2 dogs"]},
+  {qEn:"What pets do you have?",qJa:"どんなペットを飼っていますか？",guide:"「私は3匹の猫を飼っています。」",models:["I have three cats."],accepted:["i have three cats","i have 3 cats"]}
+ ],
+ "2-2":[
+  {qEn:"I have a dog.",qJa:"私は犬を飼っています。",guide:"「いつ犬の散歩をしますか？」と尋ねてみよう。",models:["When do you walk your dog?"],accepted:["when do you walk your dog"]},
+  {qEn:"I walk my dog every day.",qJa:"私は毎日犬の散歩をします。",guide:"「いつ犬の散歩をしますか？」と尋ねてみよう。",models:["When do you walk your dog?"],accepted:["when do you walk your dog"]}
+ ],
+ "3-1":[
+  {qEn:"Can you play soccer?",qJa:"サッカーはできますか？",guide:"「はい、サッカーができます。」",models:["Yes, I can play soccer.","I can play soccer.","Yes, I can play football.","I can play football."],accepted:["yes i can play soccer","i can play soccer","yes i can play football","i can play football"]},
+  {qEn:"Can you swim?",qJa:"泳ぐことができますか？",guide:"「いいえ、泳ぐことができません。」",models:["No, I can't swim.","I can't swim."],accepted:["no i cant swim","i cant swim"]}
+ ],
+ "3-2":[
+  {qEn:"I like sports.",qJa:"スポーツが好きです。",guide:"「どんなスポーツができますか？」と尋ねてみよう。",models:["What sports can you play?"],accepted:["what sports can you play","what sport can you play"]},
+  {qEn:"I can do many things.",qJa:"私はいろいろなことができます。",guide:"「何ができますか？」と尋ねてみよう。",models:["What can you do?"],accepted:["what can you do"]}
+ ],
+ "4-1":[
+  {qEn:"What's this?",qJa:"これは何ですか？",guide:"「これは私の本です。」",models:["This is my book."],accepted:["this is my book"]},
+  {qEn:"What's that?",qJa:"あれは何ですか？",guide:"「あれは私のかばんです。」",models:["That is my bag.","That's my bag."],accepted:["that is my bag","thats my bag"]}
+ ],
+ "4-2":[
+  {qEn:"This is my family.",qJa:"これは私の家族です。",guide:"「彼は誰ですか？」と尋ねてみよう。",models:["Who is he?","Who's he?"],accepted:["who is he","whos he"]},
+  {qEn:"This is a picture of my family.",qJa:"これは私の家族の写真です。",guide:"「彼女は誰ですか？」と尋ねてみよう。",models:["Who is she?","Who's she?"],accepted:["who is she","whos she"]}
+ ],
+ "5-1":[
+  {qEn:"What does Ken like?",qJa:"ケンは何が好きですか？",guide:"「彼はサッカーが好きです。」",models:["He likes soccer.","He likes football."],accepted:["he likes soccer","he likes football"]},
+  {qEn:"Does Ken like tennis?",qJa:"ケンはテニスが好きですか？",guide:"「いいえ、彼はテニスが好きではありません。」",models:["No, he doesn't like tennis.","He doesn't like tennis."],accepted:["no he doesnt like tennis","he doesnt like tennis"]}
+ ],
+ "5-2":[
+  {qEn:"Ken likes sports.",qJa:"ケンはスポーツが好きです。",guide:"「彼はサッカーをしますか？」と尋ねてみよう。",models:["Does he play soccer?","Does he play football?"],accepted:["does he play soccer","does he play football"]},
+  {qEn:"Emma likes music.",qJa:"エマは音楽が好きです。",guide:"「彼女はピアノを弾きますか？」と尋ねてみよう。",models:["Does she play the piano?"],accepted:["does she play the piano"]}
+ ],
+ "6-1":[
+  {qEn:"Do you know Ken?",qJa:"ケンを知っていますか？",guide:"「はい。私は彼をよく知っています。」",models:["Yes, I know him well.","I know him well."],accepted:["yes i know him well","i know him well"]},
+  {qEn:"Do you know Emma?",qJa:"エマを知っていますか？",guide:"「はい。私は彼女を知っています。」",models:["Yes, I know her.","I know her."],accepted:["yes i know her","i know her"]}
+ ],
+ "6-2":[
+  {qEn:"Why do you like English?",qJa:"なぜ英語が好きなのですか？",guide:"「楽しいからです。」と答えてみよう。",models:["Because it's fun.","Because it is fun."],accepted:["because its fun","because it is fun"]},
+  {qEn:"I like soccer.",qJa:"私はサッカーが好きです。",guide:"「なぜサッカーが好きなの？」と尋ねてみよう。",models:["Why do you like soccer?","Why do you like football?"],accepted:["why do you like soccer","why do you like football"]}
+ ],
+ "7-1":[
+  {qEn:"Is there a bakery near here?",qJa:"この近くにパン屋さんはありますか？",guide:"「はい。駅の近くにパン屋さんがあります。」",models:["Yes, there is a bakery near the station.","There is a bakery near the station."],accepted:["yes there is a bakery near the station","there is a bakery near the station"]},
+  {qEn:"Are there any shops near the station?",qJa:"駅の近くにお店はありますか？",guide:"「はい。2つのお店があります。」",models:["Yes, there are two shops.","There are two shops."],accepted:["yes there are two shops","there are two shops","yes there are 2 shops","there are 2 shops"]}
+ ],
+ "7-2":[
+  {qEn:"There's a bakery near the station.",qJa:"駅の近くにパン屋さんがありますよ。",guide:"「どうやってそこへ行きますか？」と尋ねてみよう。",models:["How do I get there?"],accepted:["how do i get there"]},
+  {qEn:"There's a bookstore near the park.",qJa:"公園の近くに本屋さんがありますよ。",guide:"「どうやってそこへ行きますか？」と尋ねてみよう。",models:["How do I get there?"],accepted:["how do i get there"]}
+ ],
+ "8-1":[
+  {qEn:"What are you doing now?",qJa:"今、何をしていますか？",guide:"「サッカーをしています。」",models:["I'm playing soccer.","I am playing soccer.","I'm playing football.","I am playing football."],accepted:["im playing soccer","i am playing soccer","im playing football","i am playing football"]},
+  {qEn:"What are you doing?",qJa:"何をしていますか？",guide:"「本を読んでいます。」",models:["I'm reading a book.","I am reading a book."],accepted:["im reading a book","i am reading a book"]}
+ ],
+ "8-2":[
+  {qEn:"Hi!",qJa:"やあ！",guide:"「何をしていますか？」と尋ねてみよう。",models:["What are you doing?"],accepted:["what are you doing"]},
+  {qEn:"Hello. I'm busy now.",qJa:"こんにちは。今ちょっと忙しいです。",guide:"「何をしていますか？」と尋ねてみよう。",models:["What are you doing?"],accepted:["what are you doing"]}
+ ],
+ "9-1":[
+  {qEn:"What did you do on your holiday?",qJa:"休日に何をしましたか？",guide:"「家にいました。」",models:["I stayed home."],accepted:["i stayed home"]},
+  {qEn:"Where did you stay on your holiday?",qJa:"休日はどこに滞在しましたか？",guide:"「ホテルに滞在しました。」",models:["I stayed at a hotel."],accepted:["i stayed at a hotel"]}
+ ],
+ "9-2":[
+  {qEn:"What did you see on your holiday?",qJa:"休日に何を見ましたか？",guide:"「映画を見ました。」",models:["I saw a movie."],accepted:["i saw a movie","i saw a film"]},
+  {qEn:"What did you see at the zoo?",qJa:"動物園で何を見ましたか？",guide:"「ライオンを見ました。」",models:["I saw a lion."],accepted:["i saw a lion"]}
+ ],
+ "9-3":[
+  {qEn:"I had a good holiday.",qJa:"楽しい休日でした。",guide:"「サッカーをしましたか？」と尋ねてみよう。",models:["Did you play soccer?","Did you play football?"],accepted:["did you play soccer","did you play football"]},
+  {qEn:"I went to the park yesterday.",qJa:"昨日、公園へ行きました。",guide:"「テニスをしましたか？」と尋ねてみよう。",models:["Did you play tennis?"],accepted:["did you play tennis"]}
+ ],
+ "10-1":[
+  {qEn:"What was your father like when he was young?",qJa:"あなたのお父さんは若いころ、どんな人でしたか？",guide:"「父はサッカーが得意でした。」",models:["My father was good at soccer.","My father was good at football.","He was good at soccer.","He was good at football."],accepted:["my father was good at soccer","my father was good at football","he was good at soccer","he was good at football"]},
+  {qEn:"What was your mother like when she was young?",qJa:"あなたのお母さんは若いころ、どんな人でしたか？",guide:"「母は音楽が得意でした。」",models:["My mother was good at music.","She was good at music."],accepted:["my mother was good at music","she was good at music"]}
+ ],
+ "10-2":[
+  {qEn:"I stayed home yesterday.",qJa:"昨日は家にいました。",guide:"「昨日、ひまでしたか？」と尋ねてみよう。",models:["Were you free yesterday?"],accepted:["were you free yesterday"]},
+  {qEn:"I was at school yesterday.",qJa:"昨日は学校にいました。",guide:"「昨日、忙しかったですか？」と尋ねてみよう。",models:["Were you busy yesterday?"],accepted:["were you busy yesterday"]}
+ ],
+ "10-3":[
+  {qEn:"What were you doing at eight last night?",qJa:"昨夜8時、何をしていましたか？",guide:"「テレビを見ていました。」",models:["I was watching TV."],accepted:["i was watching tv","i was watching television"]},
+  {qEn:"What were you doing at seven yesterday?",qJa:"昨日7時、何をしていましたか？",guide:"「夕食を食べていました。」",models:["I was eating dinner."],accepted:["i was eating dinner","i was having dinner"]}
+ ]
+};
+
+function attachSunshine1Variants(){
+ for(const [p,qs] of Object.entries(sunshine1Programs)){
+   qs.forEach((q,i)=>{
+     const v=sunshine1ConversationVariants[p+"-"+(i+1)];
+     if(v && v.length) q.variants=v;
+   });
+ }
+}
+attachSunshine1Variants();
+
 let grade=Number(localStorage.getItem("sunshine_grade")||2);
 if(grade!==1 && grade!==2) grade=2;
 const getPrograms=()=>grade===1?sunshine1Programs:sunshine2Programs;
@@ -729,6 +839,9 @@ if(!programs[program]) program=(grade===1?10:1);
 let questions=programs[program];
 let current=Number(localStorage.getItem("sunshine_current_"+grade+"_"+program)||0);
 let streaks=JSON.parse(localStorage.getItem("sunshine_streaks_"+grade+"_"+program)||"[0,0,0]");
+let conversationPositions=JSON.parse(localStorage.getItem("sunshine_conversations_"+grade+"_"+program)||"[]");
+let answerChecked=false;
+let lastAnswerCorrect=false;
 
 function normalize(s){
  return s.trim().toLowerCase()
@@ -741,6 +854,7 @@ function normalize(s){
 function save(){
  localStorage.setItem("sunshine_current_"+grade+"_"+program,current);
  localStorage.setItem("sunshine_streaks_"+grade+"_"+program,JSON.stringify(streaks));
+ localStorage.setItem("sunshine_conversations_"+grade+"_"+program,JSON.stringify(conversationPositions));
  localStorage.setItem("sunshine_program",program);
 }
 function stars(n){return "★".repeat(Math.min(n,3))+"☆".repeat(Math.max(0,3-n))}
@@ -760,21 +874,39 @@ function updateProgress(){
    }
  }
 }
+
+function getActiveConversation(q,index){
+ const variants=(q.variants && q.variants.length)?q.variants:[q];
+ const pos=((conversationPositions[index]||0)%variants.length+variants.length)%variants.length;
+ return {...q,...variants[pos],_variantIndex:pos,_variantCount:variants.length};
+}
+
 function render(){
  if(!Array.isArray(questions) || questions.length===0) return;
  if(!Number.isInteger(current) || current<0 || current>=questions.length) current=0;
  if(!Array.isArray(streaks) || streaks.length!==questions.length) streaks=Array(questions.length).fill(0);
- const q=questions[current];
+ if(!Array.isArray(conversationPositions) || conversationPositions.length!==questions.length) conversationPositions=Array(questions.length).fill(0);
+ const q=getActiveConversation(questions[current],current);
  document.getElementById("programLabel").textContent="SUNSHINE "+grade+"　PROGRAM "+program;
  const labels=questions.map(x=>x.label||"");
  document.getElementById("goalText").textContent=q.goal; document.getElementById("sceneTitle").textContent=q.scene; document.getElementById("questionEn").textContent=q.qEn; document.getElementById("questionJa").textContent=q.qJa;
  document.getElementById("answerGuide").textContent=q.guide; document.getElementById("targetExpression").textContent=q.target; document.getElementById("hint").textContent=q.hint;
  document.getElementById("model").innerHTML="<strong>正解例</strong><div class='model-en'>"+q.models.join("<br>")+"</div>";
  document.getElementById("answer").value=""; document.getElementById("result").className="result"; document.getElementById("result").innerHTML=""; document.getElementById("hint").style.display="none"; document.getElementById("model").style.display="none";
+ answerChecked=false; lastAnswerCorrect=false;
+ const nc=document.getElementById("nextConversationBtn");
+ nc.style.display=(q._variantCount>1)?"":"none";
+ nc.disabled=true;
+ nc.textContent="次の会話";
  updateProgress();save();document.getElementById("answer").focus();
 }
 function checkAnswer(){
- const q=questions[current], raw=document.getElementById("answer").value, u=normalize(raw);
+ const q=getActiveConversation(questions[current],current), raw=document.getElementById("answer").value, u=normalize(raw);
+ if(answerChecked && lastAnswerCorrect){
+   result.className="result ok";
+   result.innerHTML="⭕ この会話は正解済みです。「次の会話」で別の会話に進もう。";
+   return;
+ }
  const ok=q.accepted.map(normalize).includes(u);
  if(ok){
    streaks[current]=Math.min(3,streaks[current]+1);
@@ -782,12 +914,17 @@ function checkAnswer(){
    result.innerHTML="⭕ 正解！　連続正解 "+streaks[current]+"/3";
    model.innerHTML="<strong>あなたの答え</strong><div>"+escapeHtml(raw)+"</div><strong>正しい書き方の例</strong><div class='model-en'>"+q.models[0]+"</div><div class='achieve'>🎯 できたこと：「"+q.goal+"」</div>";
    model.style.display="block";
+   answerChecked=true; lastAnswerCorrect=true;
+   const nc=document.getElementById("nextConversationBtn");
+   if(q._variantCount>1){nc.disabled=false; nc.textContent="次の会話";}
  }else{
    streaks[current]=0;
    result.className="result ng";
    result.innerHTML="❌ ちがいます。正解例を確認して、もう一度言ってみよう。";
    model.innerHTML="<strong>あなたの答え</strong><div>"+escapeHtml(raw||"（未入力）")+"</div><strong>正解例</strong><div class='model-en'>"+q.models.join("<br>")+"</div><div>💡 "+q.target+"</div>";
    model.style.display="block";
+   answerChecked=false; lastAnswerCorrect=false;
+   document.getElementById("nextConversationBtn").disabled=true;
  }
  updateProgress();save();
  if(streaks.every(n=>n>=3)){
@@ -796,6 +933,25 @@ function checkAnswer(){
  }
 }
 function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
+function nextConversation(){
+ const q=questions[current];
+ const variants=(q.variants && q.variants.length)?q.variants:[q];
+ if(variants.length<=1) return;
+ if(!lastAnswerCorrect){
+   const r=document.getElementById("result");
+   r.className="result ng";
+   r.innerHTML="先にこの会話に正解してから、次の会話へ進もう。";
+   return;
+ }
+ conversationPositions[current]=((conversationPositions[current]||0)+1)%variants.length;
+ render();
+ setTimeout(()=>{
+   const goalBox=document.querySelector(".goalbox");
+   if(goalBox) goalBox.scrollIntoView({behavior:"smooth",block:"start"});
+ },50);
+}
+
 function next(){
  current=(current+1)%questions.length;
  render();
@@ -865,7 +1021,7 @@ function speak(){
     alert("このブラウザは音声読み上げに対応していません。"); return;
   }
   speechSynthesis.cancel();
-  const q=questions[current];
+  const q=getActiveConversation(questions[current],current);
   sayText(q.qEn, selectedVoice("questionVoice"), ()=>{
     sayText(q.models[0], selectedVoice("answerVoice"));
   });
@@ -885,6 +1041,7 @@ function testVoice(kind){
 document.getElementById("checkBtn").onclick=checkAnswer;
 document.getElementById("hintBtn").onclick=()=>document.getElementById("hint").style.display="block";
 document.getElementById("speakBtn").onclick=speak;
+document.getElementById("nextConversationBtn").onclick=nextConversation;
 document.getElementById("nextBtn").onclick=next;
 function updateNav(){
  document.body.classList.remove("grade1","grade2");
@@ -930,6 +1087,14 @@ function switchProgram(n){
  if(!Array.isArray(streaks) || streaks.length!==questions.length){
    streaks=Array(questions.length).fill(0);
  }
+ try{
+   conversationPositions=JSON.parse(localStorage.getItem("sunshine_conversations_"+grade+"_"+program)||"null");
+ }catch(e){
+   conversationPositions=null;
+ }
+ if(!Array.isArray(conversationPositions) || conversationPositions.length!==questions.length){
+   conversationPositions=Array(questions.length).fill(0);
+ }
  if(!Number.isInteger(current) || current<0 || current>=questions.length){
    current=0;
  }
@@ -952,7 +1117,7 @@ document.getElementById("program7Btn").onclick=()=>switchProgram(7);
 document.getElementById("program8Btn").onclick=()=>switchProgram(8);
 document.getElementById("program9Btn").onclick=()=>switchProgram(9);
 document.getElementById("program10Btn").onclick=()=>switchProgram(10);
-document.getElementById("resetBtn").onclick=()=>{streaks=[0,0,0];current=0;localStorage.removeItem("sunshine_current_"+grade+"_"+program);localStorage.removeItem("sunshine_streaks_"+grade+"_"+program);render()};
+document.getElementById("resetBtn").onclick=()=>{streaks=Array(questions.length).fill(0); conversationPositions=Array(questions.length).fill(0);current=0;localStorage.removeItem("sunshine_current_"+grade+"_"+program);localStorage.removeItem("sunshine_streaks_"+grade+"_"+program);localStorage.removeItem("sunshine_conversations_"+grade+"_"+program);render()};
 document.getElementById("answer").addEventListener("keydown",e=>{if(e.key==="Enter")checkAnswer()});
 document.getElementById("questionVoice").addEventListener("change",e=>localStorage.setItem("sunshine_question_voice_v2",e.target.value));
 document.getElementById("answerVoice").addEventListener("change",e=>localStorage.setItem("sunshine_answer_voice_v2",e.target.value));
