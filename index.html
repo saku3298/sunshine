@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SUNSHINE 1・2 会話練習</title>
+<style>
+:root{--bg:#f6f8fc;--card:#fff;--text:#20242a;--sub:#667085;--line:#dde3ea;--accent:#315efb;--soft:#eef3ff;--ok:#18723b;--ng:#b42318;--goal:#fff8df}
+*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif;background:var(--bg);color:var(--text)}
+.wrap{max-width:760px;margin:auto;padding:18px 14px 40px}.top{font-size:13px;color:var(--sub);font-weight:700}.title{font-size:25px;margin:3px 0 16px}
+.goalbox{background:var(--goal);border:1px solid #f0dda0;border-radius:14px;padding:14px 16px;margin-bottom:14px}.goalhead{font-weight:800}.goaltext{font-size:20px;font-weight:800;margin-top:5px}
+.progress{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}.prog{background:#fff;border:1px solid var(--line);border-radius:12px;padding:9px;font-size:13px;text-align:center}.prog strong{display:block;font-size:16px;margin-top:3px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 4px 14px rgba(0,0,0,.05)}
+.scene-title{font-weight:800;margin-bottom:10px}.bubble{background:var(--soft);padding:14px;border-radius:14px;margin-bottom:12px}.en{font-size:19px;font-weight:700}.ja{font-size:14px;color:var(--sub);margin-top:4px}
+.your{padding:8px 2px 14px}.target{background:#f5f6f8;border-radius:12px;padding:12px 14px;margin-bottom:14px}.target strong{display:block;margin-bottom:4px}
+input{width:100%;font-size:18px;padding:13px 14px;border:1px solid #b9c2ce;border-radius:10px;outline:none}input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(49,94,251,.12)}
+.buttons{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}button{border:0;border-radius:10px;padding:11px 15px;font-size:15px;cursor:pointer}.primary{background:var(--accent);color:#fff}.secondary{background:#edf0f3}
+.result,.hint,.model{display:none;margin-top:13px;border-radius:11px;padding:13px 14px}.result.ok{display:block;background:#edf9f1;color:var(--ok)}.result.ng{display:block;background:#fff1f0;color:var(--ng)}.hint{background:#fff8df}.model{background:#f5f6f8}
+.model-en{font-size:20px;font-weight:800;margin:5px 0}.achieve{margin-top:9px;padding-top:9px;border-top:1px solid #dfe3e8;font-weight:800;color:var(--ok)}
+.note{font-size:13px;color:var(--sub);margin-top:14px}.complete{font-size:18px;font-weight:800}
+@media(max-width:560px){.title{font-size:21px}.goaltext{font-size:18px}.card{padding:14px}.progress{grid-template-columns:1fr}.buttons button{width:100%}input{font-size:16px}}
+
+
+.selector-block{
+  margin-bottom:12px;
+}
+.selector-label{
+  font-size:12px;
+  font-weight:800;
+  color:var(--sub);
+  margin:0 0 6px 2px;
+  letter-spacing:.03em;
+}
+.grade-selector{
+  padding:10px 12px 12px;
+  background:rgba(255,255,255,.72);
+  border:1px solid var(--line);
+  border-radius:14px;
+}
+.grade-buttons{
+  margin:0;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+.grade-buttons button{
+  width:100%;
+  padding:13px 14px;
+  border-radius:12px;
+  font-size:16px;
+  font-weight:800;
+  border:2px solid transparent;
+}
+.program-selector{
+  padding:0 2px 2px;
+}
+.program-buttons{
+  margin:0;
+  gap:7px;
+}
+.program-buttons button{
+  padding:8px 11px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:700;
+  border:1px solid var(--line);
+}
+body.grade1 .grade-selector{
+  background:#fff7fa;
+  border-color:#efc2d3;
+}
+body.grade1 .grade-buttons .secondary{
+  background:#fff;
+  color:#a94b70;
+  border-color:#e8b4c8;
+}
+body.grade1 .program-buttons .secondary{
+  background:#fffafd;
+  color:#8a5268;
+  border-color:#e8bdcd;
+}
+body.grade1 .program-buttons .primary{
+  box-shadow:0 2px 7px rgba(216,91,138,.22);
+}
+body.grade2 .grade-selector{
+  background:#f7fbff;
+  border-color:#cbdff2;
+}
+body.grade2 .grade-buttons .secondary{
+  background:#fff;
+  color:#3e6283;
+  border-color:#c7d9e8;
+}
+body.grade2 .program-buttons .secondary{
+  background:#f9fcff;
+  color:#536b7f;
+  border-color:#cfddea;
+}
+body.grade2 .program-buttons .primary{
+  box-shadow:0 2px 7px rgba(49,94,251,.20);
+}
+
+body.grade1{
+  background:linear-gradient(180deg,#fff1f6 0%,#ffe4ee 100%);
+}
+body.grade1 .wrap{
+  background:#fffafd;
+}
+body.grade1 .top{
+  color:#b83f70;
+}
+body.grade1 .goalbox{
+  background:#fff0f5;
+  border-color:#efb6cb;
+}
+body.grade1 .primary{
+  background:#d85b8a;
+  border-color:#d85b8a;
+}
+body.grade1 .secondary{
+  border-color:#e4a5bd;
+}
+body.grade2{
+  background:linear-gradient(180deg,#eef8ff 0%,#e3f3ff 100%);
+}
+
+body.grade1 .card{
+  background:#fffafd;
+  border-color:#f0c3d4;
+}
+body.grade1 .bubble{
+  background:#fff0f5;
+  border-color:#efbfd1;
+}
+body.grade1 .your{
+  background:#fff7fa;
+}
+body.grade1 .target{
+  background:#fff2f7;
+  border-color:#efbfd1;
+}
+body.grade1 .hint{
+  background:#fff4f8;
+  border-color:#efbfd1;
+}
+body.grade1 .model{
+  background:#fff4f8;
+  border-color:#efbfd1;
+}
+body.grade1 .result{
+  border-color:#efbfd1;
+}
+body.grade1 input#answer{
+  background:#fffafd;
+  border-color:#e7afc4;
+}
+body.grade1 input#answer:focus{
+  outline-color:#d85b8a;
+  border-color:#d85b8a;
+}
+
+
+.grade-buttons .grade3-reserved{
+  width:100%;
+  padding:13px 10px;
+  border-radius:12px;
+  font-size:16px;
+  font-weight:800;
+  border:2px dashed #9fcaac;
+  background:#f2fbf4;
+  color:#4f8760;
+  cursor:default;
+  opacity:.9;
+}
+.grade-buttons .grade3-reserved .reserved-note{
+  display:block;
+  margin-top:3px;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.02em;
+  opacity:.78;
+}
+@media (max-width:560px){
+  .grade-buttons{
+    grid-template-columns:1fr;
+  }
+}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">SUNSHINE ENGLISH COURSE</div>
+  <div class="title">会話でくり返し練習</div>
+
+  <div class="selector-block grade-selector">
+    <div class="selector-label">教科書を選ぶ</div>
+    <div class="buttons grade-buttons">
+      <button class="secondary" id="grade1Btn">SUNSHINE 1</button>
+      <button class="primary" id="grade2Btn">SUNSHINE 2</button>
+      <button class="grade3-reserved" id="grade3Btn" type="button" aria-disabled="true" title="来年追加予定">SUNSHINE 3<span class="reserved-note">追加予定</span></button>
+    </div>
+  </div>
+
+  <div class="selector-block program-selector">
+    <div class="selector-label">PROGRAMを選ぶ</div>
+    <div class="buttons program-buttons">
+    <button class="primary" id="program1Btn">PROGRAM 1</button>
+    <button class="secondary" id="program2Btn">PROGRAM 2</button>
+    <button class="secondary" id="program3Btn">PROGRAM 3</button>
+    <button class="secondary" id="program4Btn">PROGRAM 4</button>
+    <button class="secondary" id="program1s1Btn" style="display:none">PROGRAM 1</button>
+    <button class="secondary" id="program2s1Btn" style="display:none">PROGRAM 2</button>
+    <button class="secondary" id="program3s1Btn" style="display:none">PROGRAM 3</button>
+    <button class="secondary" id="program4s1Btn" style="display:none">PROGRAM 4</button>
+    <button class="secondary" id="program5Btn" style="display:none">PROGRAM 5</button>
+    <button class="secondary" id="program6Btn" style="display:none">PROGRAM 6</button>
+    <button class="secondary" id="program7Btn" style="display:none">PROGRAM 7</button>
+    <button class="secondary" id="program8Btn" style="display:none">PROGRAM 8</button>
+    <button class="secondary" id="program9Btn" style="display:none">PROGRAM 9</button>
+    <button class="secondary" id="program10Btn" style="display:none">PROGRAM 10</button>
+    </div>
+  </div>
+
+  <div class="top" id="programLabel" style="margin-bottom:10px;font-size:16px"></div>
+
+  <div class="goalbox">
+    <div class="goalhead">🎯 こんな表現ができる</div>
+    <div class="goaltext" id="goalText"></div>
+  </div>
+
+  <div class="progress">
+    <div class="prog" id="prog0"><span id="pl0"></span><strong id="p0">☆☆☆</strong></div>
+    <div class="prog" id="prog1"><span id="pl1"></span><strong id="p1">☆☆☆</strong></div>
+    <div class="prog" id="prog2"><span id="pl2"></span><strong id="p2">☆☆☆</strong></div>
+  </div>
+
+  <div class="card">
+    <div class="scene-title" id="sceneTitle"></div>
+    <div class="bubble">
+      <div class="en" id="questionEn"></div>
+      <div class="ja" id="questionJa"></div>
+    </div>
+
+    <div class="your">
+      <strong>あなた：</strong>
+      <div class="ja" id="answerGuide"></div>
+    </div>
+
+    <div class="target">
+      <strong>💡 今回使ってほしい表現</strong>
+      <span id="targetExpression"></span>
+    </div>
+
+    <input id="answer" autocomplete="off" placeholder="英語で答えてください" inputmode="latin" lang="en" autocapitalize="off" autocorrect="off" spellcheck="false">
+
+    <div class="buttons">
+      <button class="primary" id="checkBtn">答える</button>
+      <button class="secondary" id="hintBtn">ヒント</button>
+      <button class="secondary" id="speakBtn">🔊 👩→👦 会話を聞く</button>
+    </div>
+
+    <div id="result" class="result"></div>
+    <div id="hint" class="hint"></div>
+    <div id="model" class="model"></div>
+
+    <div class="buttons">
+      <button class="secondary" id="nextBtn">次のテーマ</button>
+      <button class="secondary" id="resetBtn">進捗をリセット</button>
+    </div>
+
+    <div style="margin-top:18px;padding:14px;background:#f5f6f8;border-radius:12px">
+      <strong>🔊 音声設定</strong>
+      <div class="ja" style="margin:5px 0 10px">実際に聞いて、質問する人と答える人の声を選べます。</div>
+      <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px">
+        <select id="questionVoice" style="min-width:0;padding:9px;border:1px solid #bcc4cf;border-radius:8px"></select>
+        <button class="secondary" id="testQuestionVoice">👩 試聴</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr auto;gap:8px">
+        <select id="answerVoice" style="min-width:0;padding:9px;border:1px solid #bcc4cf;border-radius:8px"></select>
+        <button class="secondary" id="testAnswerVoice">👦 試聴</button>
+      </div>
+    </div>
+    <div class="note">単語には柔軟に、各PROGRAMで身につけたい表現はしっかり判定します。各テーマ3回連続正解でクリアです。</div>
+  </div>
+</div>
+
+<script>
+const program1=[
+{
+ goal:"週末の予定について伝えられる",
+ scene:"友達と週末の予定について話しています。",
+ qEn:"What are you going to do this weekend?", qJa:"今週末は何をする予定ですか？",
+ guide:"「私は今週末、サッカーをする予定です。」",
+ target:"be going to ～「～する予定だ」",
+ models:["I'm going to play soccer this weekend.","I'm going to play football this weekend."],
+ accepted:[
+  "i'm going to play soccer this weekend","i am going to play soccer this weekend",
+  "i'm going to play soccer","i am going to play soccer",
+  "i'm going to play football this weekend","i am going to play football this weekend",
+  "i'm going to play football","i am going to play football"
+ ],
+ required:["going","to","play"],
+ hint:"I'm going to + 動詞の原形 で始めよう。soccer / football のどちらでもOK。"
+},
+{
+ goal:"約束に遅刻しそうなことを伝えられる",
+ scene:"友達との待ち合わせに遅れそうです。",
+ qEn:"Where are you now?", qJa:"今どこにいるの？",
+ guide:"「ごめん、遅れます。」",
+ target:"will「～だろう／～します」",
+ models:["Sorry, I'll be late."],
+ accepted:["sorry i'll be late","sorry i will be late","i'll be late","i will be late"],
+ required:["be","late"],
+ hint:"will を使います。I'll = I will。"
+},
+{
+ goal:"楽しんだことなどについて伝えられる",
+ scene:"友達と週末のことを話しています。",
+ qEn:"How was your weekend?", qJa:"週末はどうでしたか？",
+ guide:"「私はサッカーをして楽しみました。」",
+ target:"enjoy ～ing「～することを楽しむ」",
+ models:["I enjoyed playing soccer.","I enjoyed playing football."],
+ accepted:["i enjoyed playing soccer","i enjoyed playing football"],
+ required:["enjoyed","playing"],
+ hint:"enjoy の後ろは ～ing。soccer / football のどちらでもOK。"
+}];
+
+const program2=[
+{
+ goal:"人から聞いたことについて伝えられる",
+ label:"① 聞いたこと",
+ scene:"友達と新しい生徒について話しています。",
+ qEn:"Do you know about the new student?", qJa:"新しい生徒のことを知っていますか？",
+ guide:"「彼はサッカーが好きだと聞いています。」",
+ target:"I hear (that) ～「私は～だと聞いている」",
+ models:["I hear that he likes soccer.","I hear he likes soccer.","I hear that he likes football."],
+ accepted:[
+  "i hear that he likes soccer","i hear he likes soccer",
+  "i hear that he likes football","i hear he likes football"
+ ],
+ hint:"I hear (that) ～ で「～だと聞いている」。that は省略できます。"
+},
+{
+ goal:"いつ何をしたのかについて伝えられる",
+ label:"② いつ何をした",
+ scene:"友達とサッカーを始めたころについて話しています。",
+ qEn:"When did you start playing soccer?", qJa:"いつサッカーを始めましたか？",
+ guide:"「5歳のとき、お父さんとサッカーを始めました。」",
+ target:"When ～, ...「～のとき…」",
+ models:["When I was five, I started playing soccer with my father.","When I was five, I started playing football with my father."],
+ accepted:[
+  "when i was five i started playing soccer with my father","when i was five i started playing football with my father",
+  "when i was 5 i started playing soccer with my father","when i was 5 i started playing football with my father",
+  "when i was five i started playing soccer with my dad","when i was five i started playing football with my dad",
+  "when i was 5 i started playing soccer with my dad","when i was 5 i started playing football with my dad"
+ ],
+ hint:"When I was five, ... で「5歳のとき、…」。with my father で「お父さんと」。"
+},
+{
+ goal:"「もし～ならば」という条件について伝えられる",
+ label:"③ もし～ならば",
+ scene:"友達と明日の予定について話しています。",
+ qEn:"What will you do if it rains tomorrow?", qJa:"もし明日雨が降ったら、何をしますか？",
+ guide:"「もし雨が降ったら、家にいます。」",
+ target:"If ～, ...「もし～ならば…」",
+ models:["If it rains, I'll stay home.","If it rains, I will stay home."],
+ accepted:["if it rains i'll stay home","if it rains i will stay home"],
+ hint:"If it rains, ... で「もし雨が降ったら、…」。"
+}];
+
+
+const program4=[
+{
+ goal:"驚いたことについて伝えられる",
+ label:"① 驚いたこと",
+ scene:"友達からうれしい知らせを聞きました。",
+ qEn:"How did you feel when you heard the news?", qJa:"その知らせを聞いたとき、どう感じましたか？",
+ guide:"「その知らせを聞いて驚きました。」",
+ target:'be surprised to ～「～して驚く」',
+ models:["I was surprised to hear the news."],
+ accepted:[
+  "i was surprised to hear the news"
+ ],
+ hint:"I was surprised to + 動詞の原形 で「～して驚きました」。"
+},
+{
+ goal:"「しなければならないこと」などについて伝えられる",
+ label:"② しなければならないこと",
+ scene:"明日の学校の準備について話しています。",
+ qEn:"What must you do tomorrow?", qJa:"明日、何をしなければなりませんか？",
+ guide:"「早く起きなければなりません。」",
+ target:"must「～しなければならない」 / mustn\'t「～してはいけない」",
+ models:["I must get up early."],
+ accepted:[
+  "i must get up early"
+ ],
+ hint:"must + 動詞の原形 で「～しなければならない」。mustn't は「～してはいけない」。"
+},
+{
+ goal:"「する必要のないこと」などについて伝えられる",
+ label:"③ する必要のないこと",
+ scene:"明日は学校が休みです。",
+ qEn:"Do you have to get up early tomorrow?", qJa:"明日は早く起きる必要がありますか？",
+ guide:"「いいえ、早く起きる必要はありません。」",
+ target:"have to ～「～する必要がある」 / don't have to ～「～する必要はない」",
+ models:["No, I don't have to get up early."],
+ accepted:[
+  "no i dont have to get up early",
+  "i dont have to get up early"
+ ],
+ hint:"don't have to + 動詞の原形 で「～する必要はない」。"
+}];
+
+const sunshine1Program1=[
+{
+ goal:"自分や相手の名前を伝えられる",
+ label:"① 自分の名前を伝える",
+ scene:"初めて会った人に自己紹介をします。",
+ qEn:"Hi. What's your name?", qJa:"こんにちは。あなたの名前は何ですか？",
+ guide:"「私はユウキです。」",
+ target:"I'm ～.「私は～です。」",
+ models:["I'm Yuki.","I am Yuki."],
+ accepted:["im yuki","i am yuki"],
+ hint:"自分の名前を伝えるときは I'm + 名前. を使います。I'm は I am の短縮形です。"
+},
+{
+ goal:"相手の出身地を尋ねられる",
+ label:"② 出身地を尋ねる",
+ scene:"初めて会った人に、どこの出身か尋ねます。",
+ qEn:"I'm Emma. Nice to meet you.", qJa:"私はエマです。はじめまして。",
+ guide:"「どこの出身ですか？」と尋ねてみよう。",
+ target:'Are you ～?「あなたは～ですか。」 / Where ～?「～はどこですか。」',
+ models:["Where are you from?"],
+ accepted:["where are you from"],
+ hint:"出身地を尋ねるときは Where are you from? を使います。"
+}];
+
+const sunshine1Program2=[
+{
+ goal:"飼っているペットのことを伝えられる",
+ label:"① 飼っているペットについて伝える",
+ scene:"友達と飼っているペットについて話しています。",
+ qEn:"Do you have any pets?", qJa:"何かペットを飼っていますか？",
+ guide:"「はい。私は2匹の犬を飼っています。」",
+ target:'I have ～.「～を持っています。」 / 複数形',
+ models:["Yes, I have two dogs.","I have two dogs."],
+ accepted:["yes i have two dogs","i have two dogs","yes i have 2 dogs","i have 2 dogs"],
+ hint:"I have ～. で「私は～を持っています」。2匹以上なので dog は複数形 dogs にします。"
+},
+{
+ goal:"いつ犬の散歩をするかを尋ねられる",
+ label:"② 犬の散歩をする時間を尋ねる",
+ scene:"友達が犬を飼っていると聞きました。散歩する時間を尋ねます。",
+ qEn:"I walk my dog every day.", qJa:"私は毎日犬の散歩をします。",
+ guide:"「いつ犬の散歩をしますか？」と尋ねてみよう。",
+ target:'Do you ～?「～しますか。」 / When ～?「いつ～しますか。」',
+ models:["When do you walk your dog?"],
+ accepted:["when do you walk your dog"],
+ hint:"「いつ～しますか」は When do you + 動詞の原形 ～? を使います。"
+}];
+
+const sunshine1Program3=[
+{
+ goal:"自分ができることやできないことを伝えられる",
+ label:"① できること・できないこと",
+ scene:"友達とスポーツについて話しています。",
+ qEn:"Can you play soccer?", qJa:"サッカーはできますか？",
+ guide:"「はい、サッカーができます。」",
+ target:"can / can't「～することができる / できない」",
+ models:["Yes, I can play soccer.","I can play soccer.","Yes, I can play football.","I can play football."],
+ accepted:["yes i can play soccer","i can play soccer","yes i can play football","i can play football"],
+ hint:"can + 動詞の原形 で「～することができる」。できない場合は can't を使います。"
+},
+{
+ goal:"相手ができることを尋ねられる",
+ label:"② できることを尋ねる",
+ scene:"友達がどんなスポーツができるのか尋ねます。",
+ qEn:"I like sports.", qJa:"スポーツが好きです。",
+ guide:"「どんなスポーツができますか？」と尋ねてみよう。",
+ target:'Can you ～?「あなたは～できますか。」 / What can you ～?「何を～できますか。」',
+ models:["What sports can you play?"],
+ accepted:["what sports can you play","what sport can you play"],
+ hint:"何ができるか尋ねるときは What ... can you ～? を使います。"
+}];
+
+const sunshine1Program4=[
+{
+ goal:"身の回りのものについて伝えられる",
+ label:"① 身の回りのもの",
+ scene:"友達に近くにあるものを紹介します。",
+ qEn:"What's this?", qJa:"これは何ですか？",
+ guide:"「これは私の本です。」",
+ target:'This [That] is ～.「これ[あれ]は～です。」',
+ models:["This is my book."],
+ accepted:["this is my book"],
+ hint:"近くのものは This is ～.、離れたものは That is ～. を使います。"
+},
+{
+ goal:"人の名前を尋ねられる",
+ label:"② 人の名前を尋ねる",
+ scene:"写真に写っている男の人について友達に尋ねます。",
+ qEn:"This is my family.", qJa:"これは私の家族です。",
+ guide:"「彼は誰ですか？」と尋ねてみよう。",
+ target:'Who is ～?「～は誰ですか。」 / He [She] is ～.「彼[彼女]は～です。」',
+ models:["Who is he?","Who's he?"],
+ accepted:["who is he","whos he"],
+ hint:"人が誰なのか尋ねるときは Who is ～?。答えるときは He is ～. / She is ～. を使います。"
+}];
+
+const sunshine1Program5=[
+{
+ goal:"自分と相手以外の人がすることやしないことを伝えられる",
+ label:"① ほかの人がすること",
+ scene:"友達とケンの好きなものについて話しています。",
+ qEn:"What does Ken like?", qJa:"ケンは何が好きですか？",
+ guide:"「彼はサッカーが好きです。」",
+ target:'He likes ～.「彼は～が好きです。」',
+ models:["He likes soccer.","He likes football."],
+ accepted:["he likes soccer","he likes football"],
+ hint:"he / she などが主語のとき、一般動詞には基本的に s をつけます。He likes ～."
+},
+{
+ goal:"自分と相手以外の人がすることを尋ねられる",
+ label:"② ほかの人がすることを尋ねる",
+ scene:"友達にケンがサッカーをするか尋ねます。",
+ qEn:"Ken likes sports.", qJa:"ケンはスポーツが好きです。",
+ guide:"「彼はサッカーをしますか？」と尋ねてみよう。",
+ target:'Does he ～?「彼は～しますか。」',
+ models:["Does he play soccer?","Does he play football?"],
+ accepted:["does he play soccer","does he play football"],
+ hint:"he / she について尋ねるときは Does he/she + 動詞の原形 ～? を使います。"
+}];
+
+const sunshine1Program6=[
+{
+ goal:"「彼に[を]、彼女に[を]」を使って、人について伝えられる",
+ label:"① him / her を使う",
+ scene:"友達と好きな人について話しています。",
+ qEn:"Do you know Ken?", qJa:"ケンを知っていますか？",
+ guide:"「はい。私は彼をよく知っています。」",
+ target:'him / her「彼に[を]、彼女に[を]」',
+ models:["Yes, I know him well.","I know him well."],
+ accepted:["yes i know him well","i know him well"],
+ hint:"男の人を「彼を／彼に」と言うときは him、女の人なら her を使います。"
+},
+{
+ goal:"好きな理由を尋ねたり答えたりできる",
+ label:"② 好きな理由を尋ねる・答える",
+ scene:"友達と好きな教科について話しています。",
+ qEn:"I like English.", qJa:"私は英語が好きです。",
+ guide:"「なぜ英語が好きなの？」と尋ねてみよう。",
+ target:'Why ～? - Because ...「なぜ～ですか。」-「…だからです。」',
+ models:["Why do you like English?"],
+ accepted:["why do you like english"],
+ hint:"理由を尋ねるときは Why ～?。答えるときは Because ... を使います。"
+}];
+
+const sunshine1Program7=[
+{
+ goal:"店があることを伝えられる",
+ label:"① 店があること",
+ scene:"友達に町の中のお店について話しています。",
+ qEn:"Is there a bakery near here?", qJa:"この近くにパン屋さんはありますか？",
+ guide:"「はい。駅の近くにパン屋さんがあります。」",
+ target:'There is [are] ～.「～があります。」',
+ models:["Yes, there is a bakery near the station.","There is a bakery near the station."],
+ accepted:["yes there is a bakery near the station","there is a bakery near the station"],
+ hint:"1つのものなら There is ～.、複数なら There are ～. を使います。"
+},
+{
+ goal:"店への行き方を尋ねられる",
+ label:"② 店への行き方を尋ねる",
+ scene:"行きたいお店への行き方がわかりません。近くの人に尋ねます。",
+ qEn:"There's a bakery near the station.", qJa:"駅の近くにパン屋さんがありますよ。",
+ guide:"「どうやってそこへ行きますか？」と尋ねてみよう。",
+ target:'How ～?「どのように～しますか？」',
+ models:["How do I get there?"],
+ accepted:["how do i get there"],
+ hint:"How do I get ～? で「どうやって～へ行きますか？」と尋ねられます。"
+}];
+
+const sunshine1Program8=[
+{
+ goal:"今していることを伝えられる",
+ label:"① 今していること",
+ scene:"友達から今何をしているのか聞かれました。",
+ qEn:"What are you doing now?", qJa:"今、何をしていますか？",
+ guide:"「サッカーをしています。」",
+ target:"I'm ～ing.「～をしているところです。」",
+ models:["I'm playing soccer.","I am playing soccer.","I'm playing football.","I am playing football."],
+ accepted:[
+  "im playing soccer","i am playing soccer",
+  "im playing football","i am playing football"
+ ],
+ hint:"I'm + 動詞ing で「今～しています」と伝えます。"
+},
+{
+ goal:"今していることを尋ねられる",
+ label:"② 今していることを尋ねる",
+ scene:"友達が何かをしています。今何をしているのか尋ねてみましょう。",
+ qEn:"Hi!", qJa:"やあ！",
+ guide:"「何をしていますか？」と尋ねてみよう。",
+ target:'What are you ～ing?「何を～していますか。」',
+ models:["What are you doing?"],
+ accepted:["what are you doing"],
+ hint:"What are you + 動詞ing? で「何を～していますか？」と尋ねます。"
+}];
+
+const sunshine1Program9=[
+{
+ goal:"休日にしたことを伝えられる",
+ label:"① 休日にしたこと",
+ scene:"友達と休日のことについて話しています。",
+ qEn:"What did you do on your holiday?", qJa:"休日に何をしましたか？",
+ guide:"「家にいました。」",
+ target:'I stayed ～.「～に滞在しました。」',
+ models:["I stayed home."],
+ accepted:["i stayed home"],
+ hint:"stay の過去形 stayed を使って、I stayed ～. と伝えます。"
+},
+{
+ goal:"不規則に変化する動詞を使って、休日にしたことを伝えられる",
+ label:"② 不規則動詞で休日のこと",
+ scene:"友達に休日に見たものについて話します。",
+ qEn:"What did you see on your holiday?", qJa:"休日に何を見ましたか？",
+ guide:"「映画を見ました。」",
+ target:'I saw ～.「～を見ました。」',
+ models:["I saw a movie."],
+ accepted:["i saw a movie","i saw a film"],
+ hint:"see の過去形は saw。I saw ～. で「～を見ました」。"
+},
+{
+ goal:"過去にしたことを尋ねることができる",
+ label:"③ 過去にしたことを尋ねる",
+ scene:"友達が休日にサッカーをしたか尋ねてみましょう。",
+ qEn:"I had a good holiday.", qJa:"楽しい休日でした。",
+ guide:"「サッカーをしましたか？」と尋ねてみよう。",
+ target:'Did you ～?「～をしましたか。」',
+ models:["Did you play soccer?","Did you play football?"],
+ accepted:["did you play soccer","did you play football"],
+ hint:"Did you + 動詞の原形 ～? で、過去にしたことを尋ねます。"
+}];
+
+const sunshine1Program10=[
+{
+ goal:"家族の過去の状態などを伝えられる",
+ label:"① 家族の過去の状態",
+ scene:"友達と家族の昔のことについて話しています。",
+ qEn:"What was your father like when he was young?", qJa:"あなたのお父さんは若いころ、どんな人でしたか？",
+ guide:"「父はサッカーが得意でした。」",
+ target:'I was ～.「～でした。」',
+ models:["My father was good at soccer.","My father was good at football."],
+ accepted:["my father was good at soccer","my father was good at football","he was good at soccer","he was good at football"],
+ hint:"過去の状態は was を使って表します。My father was ～."
+},
+{
+ goal:"過去の状態などを尋ねられる",
+ label:"② 過去の状態を尋ねる",
+ scene:"友達に昨日の様子を尋ねます。",
+ qEn:"I stayed home yesterday.", qJa:"昨日は家にいました。",
+ guide:"「昨日、ひまでしたか？」と尋ねてみよう。",
+ target:'Were you ～?「～でしたか。」',
+ models:["Were you free yesterday?"],
+ accepted:["were you free yesterday"],
+ hint:"相手の過去の状態を尋ねるときは Were you ～? を使います。"
+},
+{
+ goal:"過去のある時点にしていたことを伝えられる",
+ label:"③ 過去にしていたこと",
+ scene:"友達が昨日の夜8時のことを尋ねています。",
+ qEn:"What were you doing at eight last night?", qJa:"昨夜8時、何をしていましたか？",
+ guide:"「テレビを見ていました。」",
+ target:'What were you doing?「何をしていましたか。」',
+ models:["I was watching TV."],
+ accepted:["i was watching tv","i was watching television"],
+ hint:"過去のある時点でしていたことは was/were + 動詞ing で表します。"
+}];
+
+const program3=[
+{
+ goal:"したいことについて伝えられる",
+ label:"① したいこと",
+ scene:"友達と休みの予定について話しています。",
+ qEn:"What do you want to do this summer?", qJa:"この夏、何をしたいですか？",
+ guide:"「北海道に行きたいです。」",
+ target:"want to ～「～したい」",
+ models:["I want to visit Hokkaido.","I want to go to Hokkaido."],
+ accepted:[
+  "i want to visit hokkaido","i want to go to hokkaido"
+ ],
+ hint:"I want to + 動詞の原形 で「私は～したい」。"
+},
+{
+ goal:"何のために使うかを伝えられる",
+ label:"② 何のために使う",
+ scene:"友達とコンピューターの使い方について話しています。",
+ qEn:"What do you use this computer for?", qJa:"このコンピューターを何のために使いますか？",
+ guide:"「英語を勉強するために使います。」",
+ target:"to + 動詞の原形「～するために」",
+ models:["I use it to study English."],
+ accepted:[
+  "i use it to study english","i use this computer to study english"
+ ],
+ hint:"I use it to + 動詞の原形 で「～するために使います」。"
+},
+{
+ goal:"何をするためのものかを伝えられる",
+ label:"③ 何をするためのもの",
+ scene:"のどがかわいて、何か必要なものを伝えます。",
+ qEn:"What do you need?", qJa:"何が必要ですか？",
+ guide:"「何か飲むものが必要です。」",
+ target:"to + 動詞の原形「～するための…」",
+ models:["I need something to drink."],
+ accepted:[
+  "i need something to drink"
+ ],
+ hint:"something to + 動詞の原形 で「～するための何か／～するもの」。"
+}];
+
+let program=Number(localStorage.getItem("sunshine_program")||1);
+const sunshine2Programs={1:program1,2:program2,3:program3,4:program4};
+const sunshine1Programs={1:sunshine1Program1,2:sunshine1Program2,3:sunshine1Program3,4:sunshine1Program4,5:sunshine1Program5,6:sunshine1Program6,7:sunshine1Program7,8:sunshine1Program8,9:sunshine1Program9,10:sunshine1Program10};
+let grade=Number(localStorage.getItem("sunshine_grade")||2);
+if(grade!==1 && grade!==2) grade=2;
+const getPrograms=()=>grade===1?sunshine1Programs:sunshine2Programs;
+let programs=getPrograms();
+if(!programs[program]) program=(grade===1?10:1);
+let questions=programs[program];
+let current=Number(localStorage.getItem("sunshine_current_"+grade+"_"+program)||0);
+let streaks=JSON.parse(localStorage.getItem("sunshine_streaks_"+grade+"_"+program)||"[0,0,0]");
+
+function normalize(s){
+ return s.trim().toLowerCase()
+  .replace(/[’‘]/g,"'")
+  .replace(/　/g," ")
+  .replace(/[、，,。．.！!？?]/g,"")
+  .replace(/\s+/g,"")
+  .replace(/'/g,"");
+}
+function save(){
+ localStorage.setItem("sunshine_current_"+grade+"_"+program,current);
+ localStorage.setItem("sunshine_streaks_"+grade+"_"+program,JSON.stringify(streaks));
+ localStorage.setItem("sunshine_program",program);
+}
+function stars(n){return "★".repeat(Math.min(n,3))+"☆".repeat(Math.max(0,3-n))}
+function updateProgress(){
+ for(let i=0;i<3;i++){
+   const row=document.getElementById("prog"+i);
+   const label=document.getElementById("pl"+i);
+   const star=document.getElementById("p"+i);
+   if(i<questions.length){
+     row.style.display="";
+     label.textContent=questions[i].label||"";
+     star.textContent=stars(streaks[i]||0);
+   }else{
+     row.style.display="none";
+     label.textContent="";
+     star.textContent="";
+   }
+ }
+}
+function render(){
+ if(!Array.isArray(questions) || questions.length===0) return;
+ if(!Number.isInteger(current) || current<0 || current>=questions.length) current=0;
+ if(!Array.isArray(streaks) || streaks.length!==questions.length) streaks=Array(questions.length).fill(0);
+ const q=questions[current];
+ document.getElementById("programLabel").textContent="SUNSHINE "+grade+"　PROGRAM "+program;
+ const labels=questions.map(x=>x.label||"");
+ document.getElementById("goalText").textContent=q.goal; document.getElementById("sceneTitle").textContent=q.scene; document.getElementById("questionEn").textContent=q.qEn; document.getElementById("questionJa").textContent=q.qJa;
+ document.getElementById("answerGuide").textContent=q.guide; document.getElementById("targetExpression").textContent=q.target; document.getElementById("hint").textContent=q.hint;
+ document.getElementById("model").innerHTML="<strong>正解例</strong><div class='model-en'>"+q.models.join("<br>")+"</div>";
+ document.getElementById("answer").value=""; document.getElementById("result").className="result"; document.getElementById("result").innerHTML=""; document.getElementById("hint").style.display="none"; document.getElementById("model").style.display="none";
+ updateProgress();save();document.getElementById("answer").focus();
+}
+function checkAnswer(){
+ const q=questions[current], raw=document.getElementById("answer").value, u=normalize(raw);
+ const ok=q.accepted.map(normalize).includes(u);
+ if(ok){
+   streaks[current]=Math.min(3,streaks[current]+1);
+   result.className="result ok";
+   result.innerHTML="⭕ 正解！　連続正解 "+streaks[current]+"/3";
+   model.innerHTML="<strong>あなたの答え</strong><div>"+escapeHtml(raw)+"</div><strong>正しい書き方の例</strong><div class='model-en'>"+q.models[0]+"</div><div class='achieve'>🎯 できたこと：「"+q.goal+"」</div>";
+   model.style.display="block";
+ }else{
+   streaks[current]=0;
+   result.className="result ng";
+   result.innerHTML="❌ ちがいます。正解例を確認して、もう一度言ってみよう。";
+   model.innerHTML="<strong>あなたの答え</strong><div>"+escapeHtml(raw||"（未入力）")+"</div><strong>正解例</strong><div class='model-en'>"+q.models.join("<br>")+"</div><div>💡 "+q.target+"</div>";
+   model.style.display="block";
+ }
+ updateProgress();save();
+ if(streaks.every(n=>n>=3)){
+   result.className="result ok";
+   result.innerHTML="<span class='complete'>🎉 PROGRAM "+program+" クリア！</span><br>3つの「こんな表現ができる」をすべて達成しました。";
+ }
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function next(){current=(current+1)%questions.length;render()}
+function getEnglishVoices(){
+  return speechSynthesis.getVoices().filter(v => /^en(-|_)/i.test(v.lang));
+}
+
+function populateVoices(){
+  const voices=getEnglishVoices();
+  const qSel=document.getElementById("questionVoice");
+  const aSel=document.getElementById("answerVoice");
+  if(!voices.length){
+    qSel.innerHTML="<option>英語音声を読み込み中...</option>";
+    aSel.innerHTML="<option>英語音声を読み込み中...</option>";
+    return;
+  }
+  const savedQ=localStorage.getItem("sunshine_question_voice_v2")||"";
+  const savedA=localStorage.getItem("sunshine_answer_voice_v2")||"";
+  qSel.innerHTML=""; aSel.innerHTML="";
+  voices.forEach((v,i)=>{
+    const label=v.name+" ("+v.lang+")";
+    const oq=document.createElement("option");
+    oq.value=v.name; oq.textContent=label;
+    const oa=oq.cloneNode(true);
+    qSel.appendChild(oq); aSel.appendChild(oa);
+  });
+  const natasha=voices.find(v=>v.name.toLowerCase().includes("natasha"));
+  const william=voices.find(v=>v.name.toLowerCase().includes("william"));
+
+  if([...qSel.options].some(o=>o.value===savedQ)){
+    qSel.value=savedQ;
+  }else if(natasha){
+    qSel.value=natasha.name;
+  }
+
+  if([...aSel.options].some(o=>o.value===savedA)){
+    aSel.value=savedA;
+  }else if(william){
+    aSel.value=william.name;
+  }else if(voices.length>1){
+    aSel.selectedIndex=1;
+  }
+}
+
+function selectedVoice(id){
+  const name=document.getElementById(id).value;
+  return getEnglishVoices().find(v=>v.name===name)||null;
+}
+
+function sayText(text, voice, onend){
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang="en-US"; u.rate=.9;
+  if(voice) u.voice=voice;
+  if(onend) u.onend=onend;
+  speechSynthesis.speak(u);
+}
+
+function speak(){
+  if(!("speechSynthesis" in window)){
+    alert("このブラウザは音声読み上げに対応していません。"); return;
+  }
+  speechSynthesis.cancel();
+  const q=questions[current];
+  sayText(q.qEn, selectedVoice("questionVoice"), ()=>{
+    sayText(q.models[0], selectedVoice("answerVoice"));
+  });
+}
+
+function testVoice(kind){
+  if(!("speechSynthesis" in window)) return;
+  speechSynthesis.cancel();
+  if(kind==="question"){
+    sayText("What are you going to do this weekend?", selectedVoice("questionVoice"));
+  }else{
+    sayText("I'm going to play soccer this weekend.", selectedVoice("answerVoice"));
+  }
+}
+
+
+document.getElementById("checkBtn").onclick=checkAnswer;
+document.getElementById("hintBtn").onclick=()=>document.getElementById("hint").style.display="block";
+document.getElementById("speakBtn").onclick=speak;
+document.getElementById("nextBtn").onclick=next;
+function updateNav(){
+ document.body.classList.remove("grade1","grade2");
+ document.body.classList.add(grade===1?"grade1":"grade2");
+ document.getElementById("grade1Btn").className=grade===1?"primary":"secondary";
+ document.getElementById("grade2Btn").className=grade===2?"primary":"secondary";
+ ["program1Btn","program2Btn","program3Btn","program4Btn"].forEach(id=>document.getElementById(id).style.display=grade===2?"":"none");
+ ["program1s1Btn","program2s1Btn","program3s1Btn","program4s1Btn","program5Btn","program6Btn","program7Btn","program8Btn","program9Btn","program10Btn"].forEach(id=>document.getElementById(id).style.display=grade===1?"":"none");
+ document.getElementById("program1Btn").className=program===1?"primary":"secondary";
+ document.getElementById("program2Btn").className=program===2?"primary":"secondary";
+ document.getElementById("program3Btn").className=program===3?"primary":"secondary";
+ document.getElementById("program4Btn").className=program===4?"primary":"secondary";
+ document.getElementById("program1s1Btn").className=program===1?"primary":"secondary";
+ document.getElementById("program2s1Btn").className=program===2?"primary":"secondary";
+ document.getElementById("program3s1Btn").className=program===3?"primary":"secondary";
+ document.getElementById("program4s1Btn").className=program===4?"primary":"secondary";
+ document.getElementById("program5Btn").className=program===5?"primary":"secondary";
+ document.getElementById("program6Btn").className=program===6?"primary":"secondary";
+ document.getElementById("program7Btn").className=program===7?"primary":"secondary";
+ document.getElementById("program8Btn").className=program===8?"primary":"secondary";
+ document.getElementById("program9Btn").className=program===9?"primary":"secondary";
+ document.getElementById("program10Btn").className=program===10?"primary":"secondary";
+}
+function switchGrade(n){
+ grade=n;
+ localStorage.setItem("sunshine_grade",grade);
+ programs=getPrograms();
+ program=1;
+ switchProgram(program);
+}
+function switchProgram(n){
+ programs=getPrograms();
+ if(!programs[n]) n=(grade===1?10:1);
+ program=n;
+ questions=programs[program];
+ localStorage.setItem("sunshine_program",program);
+ current=Number(localStorage.getItem("sunshine_current_"+grade+"_"+program)||0);
+ try{
+   streaks=JSON.parse(localStorage.getItem("sunshine_streaks_"+grade+"_"+program)||"null");
+ }catch(e){
+   streaks=null;
+ }
+ if(!Array.isArray(streaks) || streaks.length!==questions.length){
+   streaks=Array(questions.length).fill(0);
+ }
+ if(!Number.isInteger(current) || current<0 || current>=questions.length){
+   current=0;
+ }
+ updateNav();
+ render();
+}
+document.getElementById("grade1Btn").onclick=()=>switchGrade(1);
+document.getElementById("grade2Btn").onclick=()=>switchGrade(2);
+document.getElementById("program1Btn").onclick=()=>switchProgram(1);
+document.getElementById("program2Btn").onclick=()=>switchProgram(2);
+document.getElementById("program3Btn").onclick=()=>switchProgram(3);
+document.getElementById("program4Btn").onclick=()=>switchProgram(4);
+document.getElementById("program1s1Btn").onclick=()=>switchProgram(1);
+document.getElementById("program2s1Btn").onclick=()=>switchProgram(2);
+document.getElementById("program3s1Btn").onclick=()=>switchProgram(3);
+document.getElementById("program4s1Btn").onclick=()=>switchProgram(4);
+document.getElementById("program5Btn").onclick=()=>switchProgram(5);
+document.getElementById("program6Btn").onclick=()=>switchProgram(6);
+document.getElementById("program7Btn").onclick=()=>switchProgram(7);
+document.getElementById("program8Btn").onclick=()=>switchProgram(8);
+document.getElementById("program9Btn").onclick=()=>switchProgram(9);
+document.getElementById("program10Btn").onclick=()=>switchProgram(10);
+document.getElementById("resetBtn").onclick=()=>{streaks=[0,0,0];current=0;localStorage.removeItem("sunshine_current_"+grade+"_"+program);localStorage.removeItem("sunshine_streaks_"+grade+"_"+program);render()};
+document.getElementById("answer").addEventListener("keydown",e=>{if(e.key==="Enter")checkAnswer()});
+document.getElementById("questionVoice").addEventListener("change",e=>localStorage.setItem("sunshine_question_voice_v2",e.target.value));
+document.getElementById("answerVoice").addEventListener("change",e=>localStorage.setItem("sunshine_answer_voice_v2",e.target.value));
+document.getElementById("testQuestionVoice").onclick=()=>testVoice("question");
+document.getElementById("testAnswerVoice").onclick=()=>testVoice("answer");
+if("speechSynthesis" in window){
+  populateVoices();
+  speechSynthesis.onvoiceschanged=populateVoices;
+  setTimeout(populateVoices,300);
+}
+switchProgram(program);
+</script>
+</body>
+</html>
