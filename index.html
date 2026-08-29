@@ -796,7 +796,16 @@ function checkAnswer(){
  }
 }
 function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function next(){current=(current+1)%questions.length;render()}
+function next(){
+ current=(current+1)%questions.length;
+ render();
+ setTimeout(()=>{
+   const goalBox=document.querySelector(".goalbox");
+   if(goalBox){
+     goalBox.scrollIntoView({behavior:"smooth",block:"start"});
+   }
+ },50);
+}
 function getEnglishVoices(){
   return speechSynthesis.getVoices().filter(v => /^en(-|_)/i.test(v.lang));
 }
